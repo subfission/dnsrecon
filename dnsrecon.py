@@ -484,6 +484,24 @@ def brute_domain(res, dict, dom, filter=None, verbose=False, ignore_wildcard=Fal
     print_good("{0} Records Found".format(len(found_hosts)))
     return found_hosts
 
+def goo_result_process(res, found_hosts):
+    """
+    This function processes the results returned from the Google Search and does
+    an A and AAAA query for the IP of the found host. Prints and returns a dictionary
+    with all the results found.
+    """
+    returned_records = []
+    for sd in found_hosts:
+        for sdip in res.get_ip(sd):
+            if re.search(r'^A',sdip[0]):
+                print_status('\t {0} {1} {2}'.format(sdip[0], sdip[1], sdip[2]))
+            
+                returned_records.extend([{'type':sdip[0], 'name':sdip[1], \
+                'address':sdip[2]
+                }])
+    print_good("{0} Records Found".format(len(returned_records)))
+    return returned_records
+
 
 def in_cache(dict_file, ns):
     """
